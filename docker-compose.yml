@@ -1,1 +1,18 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: covid_db
+    ports:
+      - "5432:5432"
 
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DB_URI=postgresql://user:password@db:5432/covid_db
+    command: python ingestion/ingest_data.py
